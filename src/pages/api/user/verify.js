@@ -1,6 +1,7 @@
 
 import connectDB from '../../../../server/mongodb/index.js'; 
 import User from '../../../../server/mongodb/models/User.js'; 
+import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -13,6 +14,9 @@ export default async function handler(req, res) {
     const user = await User.findOne({ email });
     
     if (user && user.comparePassword(password)) {
+      const token = jwt.sign({ userId: user._id, admin: user.admin || false }, 'secret_key', { expiresIn: '1h' });
+      res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Path=/; Max-Age=3600; SameSite=Strict`);
+
       return res.status(200).json({
         userId: user._id,
         admin: user.admin || false,
