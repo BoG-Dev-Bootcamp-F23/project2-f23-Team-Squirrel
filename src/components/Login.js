@@ -1,17 +1,46 @@
+"use client";
 import React, { useState } from 'react';
 import styles from '../styles/style.module.css';
 import Link from 'next/link'; 
 import Image from 'next/image';
+import { useRouter } from 'next/router'
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log('Login submitted:', { email, password });
+    // const formData = new FormData(e.target);
+    // const email = formData.get("email");
+    // const password = formData.get("password");
+    try {
+      const res = await fetch("/api/user/verify", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(res);
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+        if (data) {
+          console.log("Login successful");
+          router.push("/protected/dashboard");
+        } else {
+          alert("Email and password are wrong!");
+        }
+      } else {
+        alert("Email or password are wrong!");
+      }
+    } catch (e) {
+      alert("An error occurred while logging in");
+    }
   };
+  
 
   return (
     <div className={styles.container}>
@@ -48,9 +77,17 @@ const Login = () => {
           />
           <div className={styles['input-line']}></div>
         </div>
-        <button type="submit" className={styles['signup-button']}>
+        <button
+          type="submit"
+          className={styles['signup-button']}
+          onClick={(e) => {
+            e.preventDefault();
+            handleSubmit(e);
+          }}
+>
           Login
         </button>
+
       </form>
 
       <div className={styles['have-account']}>
