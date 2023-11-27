@@ -38,7 +38,10 @@ export default async function handler(req, res) {
         })}; Path=/; HttpOnly; Max-Age=3600; SameSite=Strict;`
       );
 
-      return res.status(200).json({ success: true });
+      return res.status(200).json({
+        userId: user._id,
+        admin: user.admin || false,
+      });
     } else {
       return res.status(500).json({ error: "Invalid email or password" });
     }
