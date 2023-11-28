@@ -1,3 +1,19 @@
+"use client" ;
+
+import { useRouter } from 'next/router'
+import { useAuth } from "@/hooks/useAuth";
+import Link from "next/link";
 export default function dashboard() {
-    return <h1>Very protected page</h1>;
+  const auth = useAuth();
+  const router = useRouter();
+  return <> 
+                {auth ? (
+                   <p>DASHBOARD</p>
+                ) : (
+                  <>
+                  <p>Unauthorized Access! </p>
+                  <Link href="/login">Login here</Link>
+                  </>
+                )}
+  </>
 }

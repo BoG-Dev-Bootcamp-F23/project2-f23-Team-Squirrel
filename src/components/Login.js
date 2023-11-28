@@ -29,7 +29,7 @@ const Login = () => {
         console.log(data);
         if (data) {
           console.log("Login successful");
-          router.push("/protected/dashboard");
+          router.push("http://localhost:3000/protected/dashboard");
         } else {
           alert("Email and password are wrong!");
         }

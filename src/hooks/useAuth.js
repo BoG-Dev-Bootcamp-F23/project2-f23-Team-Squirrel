@@ -1,7 +1,7 @@
 "use client" ;
 import React from "react";
 import Cookies from "universal-cookie";
-import { verifyJwtToken } from "@/libs/auth";
+import { verifyJwtToken } from "@/lib/auth";
 
 export function useAuth() {
   const [auth, setAuth] = React.useState(null);
