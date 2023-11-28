@@ -1,5 +1,5 @@
 import connectDB from "..";
-import TrainingLog from "../models/TrainingLog";
+import TrainingLog from "../models/Training.js";
 
 export default async function deleteTraining(data) {
     try {
