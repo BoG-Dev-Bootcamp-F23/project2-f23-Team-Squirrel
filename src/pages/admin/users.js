@@ -1,20 +1,30 @@
-import { useRouter } from 'next/router';
-import { useState, useEffect } from "react";
-import { useAuth } from '../../hooks/useAuth'
-import Sidebar from '../../components/Sidebar';
+import React, { useState, useEffect } from 'react';
+import styles from '@/styles/UserDisplay.module.css';
 
 export default function users() {
-    const { userId, fullName, admin, logout, login } = useAuth();
-    const router = useRouter();
-    useEffect(()=>{
-        if (userId === -1 || admin === false) {
-            router.push("/login")
-        }
-    },[userId]);
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const result = await fetch("/api/admin/users");
+            const userData = await result.json();
+            setUsers(userData);
+        };
+        fetchUsers();
+    }, []);
+
     return (
-        <>
-            <Sidebar selected="AU"/>
-            <h1>User admin dashboard</h1>
-        </> 
-    )
+        <div>
+            <h1>Users</h1>
+            <ul>
+                {users.map(user => (
+                    user.fullname && (
+                        <li key={user._id}>
+                            {user.fullname} - {user.isAdmin ? 'Admin' : 'User'} - Location: {user.location || 'Not specified'}
+                        </li>
+                    )
+                ))}
+            </ul>
+        </div>
+    );
 }
